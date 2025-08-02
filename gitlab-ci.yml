@@ -1,0 +1,11 @@
+check_nginx:
+  stage: test
+  before_script:
+    - eval "$(ssh-agent -s)" # запуск ssh-агента
+    - echo "$SSH_PRIVATE_KEY" | ssh-add - # добавление приватного ключа
+    - ssh-keyscan "$IP_ADDRESS" >> ~/.ssh/known_hosts # добавление ip хоста с nginx в known_hosts хоста раннера
+  tags:
+    - test # тег тестового раннера
+  script:
+    - ssh "$USER@$IP_ADDRESS" "which nginx && nginx -v" # проверка на наличие nginx
+
